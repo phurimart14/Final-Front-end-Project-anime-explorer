@@ -38,7 +38,7 @@ export function Sidebar() {
           <Link
             key={index}
             to={item.path}
-            className={`w-full flex item-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
               item.active
                 ? "bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-400 border border-purple-500/30"
                 : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
