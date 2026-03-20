@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Trending } from "./pages/Trending";
 import { WatchLater } from "./pages/WatchLater";
@@ -8,12 +8,12 @@ import { RootLayout } from "./layouts/RootLayout";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <RootLayout />,
     children: [
-      { index: true, Component: Home },
-      { path: "trending", Component: Trending },
-      { path: "watch-later", Component: WatchLater },
-      { path: "favorites", Component: Favorite },
+      { index: true, element: <Home /> },
+      { path: "trending", element: <Trending /> },
+      { path: "watch-later", element: <WatchLater /> },
+      { path: "favorites", element: <Favorite /> },
     ],
   },
 ]);
