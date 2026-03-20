@@ -27,9 +27,11 @@ export function Sidebar() {
   ];
 
   return (
-    <aside>
-      <div>
-        <h1>AnimeList</h1>
+    <aside className="w-64 bg-zinc-950 border-r border-zinc-800 flex flex-col h-full fixed left-0 top-0 max-md:hidden">
+      <div className="p-6">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
+          AnimeList
+        </h1>
       </div>
       <nav className="flex-1 px-3">
         {menuItems.map((item, index) => (
