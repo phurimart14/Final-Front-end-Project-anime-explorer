@@ -1,9 +1,6 @@
-function App() {
-  return (
-    <>
-      <h1 className="text-3xl font-bold text-purple-500">Anime Explorer</h1>
-    </>
-  );
-}
+import { RouterProvider } from "react-router";
+import { router } from "./routes";
 
-export default App;
+export default function App() {
+  return <RouterProvider router={router} />;
+}
