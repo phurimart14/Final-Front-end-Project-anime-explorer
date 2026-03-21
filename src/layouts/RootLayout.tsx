@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
-import { Sidebar } from "../component/Sidebar.tsx";
-import { SearchBar } from "../component/SearchBar.tsx";
+import { Outlet } from "react-router";
+import { Sidebar } from "../components/Sidebar";
+import { SearchBar } from "../components/SearchBar";
 
 export function RootLayout() {
   return (
-    <div className="flex size-full bg-black text-zinc-100 overflow-hidden">
-      {/*SideBar*/}
+    <div className="size-full bg-black text-zinc-100 flex overflow-hidden">
+      {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
