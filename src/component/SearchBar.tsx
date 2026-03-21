@@ -1,27 +1,23 @@
 import { Search, Filter, Bell, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const genres = [
-  "Action",
-  "Adventure",
-  "Comedy",
-  "Drama",
-  "Fantasy",
-  "Horror",
-  "Mystery",
-  "Romance",
-  "Sci-Fi",
-  "Slice of Life",
-  "Sports",
-  "Supernatural",
-  "Thriller",
-  "Psychological",
-  "Mecha",
-];
+type Genre = {
+  mal_id: number;
+  name: string;
+};
 
 export function SearchBar() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("https://api.jikan.moe/v4/genres/anime")
+      .then((res) => setGenres(res.data.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
@@ -118,15 +114,15 @@ export function SearchBar() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {genres.map((genre) => (
               <button
-                key={genre}
-                onClick={() => toggleGenre(genre)}
+                key={genre.mal_id}
+                onClick={() => toggleGenre(genre.name)}
                 className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  selectedGenres.includes(genre)
+                  selectedGenres.includes(genre.name)
                     ? "bg-purple-600/20 text-purple-400 border border-purple-500/50"
                     : "bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600"
                 }`}
               >
-                {genre}
+                {genre.name}
               </button>
             ))}
           </div>
