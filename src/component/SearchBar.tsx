@@ -51,7 +51,7 @@ export function SearchBar() {
 
         <button
           onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className={`p-3 rounded-lg border transition-all ${
+          className={`relative p-3 rounded-lg border transition-all ${
             isFilterOpen || selectedGenres.length > 0
               ? "bg-purple-600 border-purple-500 text-white"
               : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-purple-400 hover:border-purple-500/50"
@@ -68,35 +68,80 @@ export function SearchBar() {
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full"></span>
         </button>
-
-        {/* Filter Dropdown */}
-        {isFilterOpen && (
-          <div className="absolute left-6 right-6 mt-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-zinc-100">
-                Filter by Genre
-              </h3>
-              <div>
-                {selectedGenres.length > 0 && (
-                  <button
-                    onClick={clearFilters}
-                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    Claer All
-                  </button>
-                )}
+      </div>
+      {/* Filter Dropdown */}
+      {isFilterOpen && (
+        <div className="absolute left-6 right-6 mt-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-zinc-100">
+              Filter by Genre
+            </h3>
+            <div className="flex items-center gap-2">
+              {selectedGenres.length > 0 && (
                 <button
-                  onClick={() => setIsFilterOpen(false)}
-                  className="p-1 text-zinc-400 hover:text-zinc-100 transition-colors"
+                  onClick={clearFilters}
+                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
                 >
-                  <X className="w-5 h-5" />
+                  Clear All
                 </button>
-              </div>
+              )}
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="p-1 text-zinc-400 hover:text-zinc-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* Selected Genres */}
+          {selectedGenres.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {selectedGenres.map((genre) => (
+                <span
+                  key={genre}
+                  className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-full flex items-center gap-2"
+                >
+                  {genre}
+                  <button
+                    onClick={() => toggleGenre(genre)}
+                    className="hover:bg-white/20 rounded-full p-0.5"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          {/* Genre Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+            {genres.map((genre) => (
+              <button
+                key={genre}
+                onClick={() => toggleGenre(genre)}
+                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  selectedGenres.includes(genre)
+                    ? "bg-purple-600/20 text-purple-400 border border-purple-500/50"
+                    : "bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600"
+                }`}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+
+          {/* Apply Button */}
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => setIsFilterOpen(false)}
+              className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition-all"
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
