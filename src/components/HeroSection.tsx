@@ -1,0 +1,105 @@
+import { Play, Star, Clock, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+type Anime = {
+  mal_id: number;
+  title: string;
+  synopsis: string;
+  score: number;
+  year: number;
+  episodes: number;
+  status: string;
+  genres: { mal_id: number; name: string }[];
+  images: {
+    jpg: {
+      large_image_url: string;
+    };
+  };
+};
+
+export function HeroSection() {
+  const [anime, setAnime] = useState<Anime | null>(null);
+
+  useEffect(() => {
+    const fetchHeroBanner = async () => {
+      try {
+        const res = await axios.get(
+          "https://api.jikan.moe/v4/top/anime?limit=1",
+        );
+        setAnime(res.data.data[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchHeroBanner();
+  }, []);
+
+  return (
+    <div className="relative h-[500px] overflow-hidden rounded-2xl mb-8">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src={anime?.images.jpg.large_image_url}
+          alt={anime?.title}
+          className="w-full h-full object-cover"
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative h-full flex items-end p-8 md:p-12">
+        <div className="max-w-2xl">
+          {/* Badge */}
+          <div className="flex items-center gap-3 mb-4">
+            <span className="px-4 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-semibold rounded-full">
+              RECOMMENDED
+            </span>
+            <span className="px-4 py-1.5 bg-green-500/20 text-green-400 text-sm font-medium rounded-full border border-green-500/30">
+              {anime?.status}
+            </span>
+          </div>
+          {/* Title */}
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+            {anime?.title}
+          </h1>
+
+          {/* Meta Info */}
+          <div className="flex items-center gap-4 mb-4 text-zinc-300">
+            <div className="flex items-center gap-1">
+              <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+              <span className="font-semibold">{anime?.score}</span>
+            </div>
+            <span>•</span>
+            <span>{anime?.year}</span>
+            <span>•</span>
+            <span>{anime?.genres.map((g) => g.name).join(", ")}</span>
+            <span>•</span>
+            <span>{anime?.episodes} Episodes</span>
+          </div>
+
+          {/* Description */}
+          <p className="text-zinc-400 text-lg mb-6 line-clamp-3">
+            {anime?.synopsis}
+          </p>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-4">
+            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg flex items-center gap-2 transition-all transform hover:scale-105">
+              <Play className="w-5 h-5 fill-current" />
+              Watch Now
+            </button>
+            <button className="p-3 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-purple-400 rounded-lg transition-all">
+              <Heart className="w-5 h-5" />
+            </button>
+            <button className="p-3 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-purple-400 rounded-lg transition-all">
+              <Clock className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
