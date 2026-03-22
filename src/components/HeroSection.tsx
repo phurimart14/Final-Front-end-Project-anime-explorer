@@ -1,46 +1,27 @@
 import { Play, Star, Clock, Heart } from "lucide-react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import type { JikanAnime } from "../types";
 
-type Anime = {
-  mal_id: number;
-  title: string;
-  synopsis: string;
-  score: number;
-  year: number;
-  episodes: number;
-  status: string;
-  genres: { mal_id: number; name: string }[];
-  images: {
-    jpg: {
-      large_image_url: string;
-    };
-  };
-  aired: {
-    prop: {
-      from: {
-        year: number | null;
-      };
-    };
-  };
-};
+interface HeroSectionProps {
+  anime: JikanAnime | null;
+}
 
-export function HeroSection() {
-  const [anime, setAnime] = useState<Anime | null>(null);
+export function HeroSection({ anime }: HeroSectionProps) {
+  //ดึงrequestซ้ำกัน
+  // const [anime, setAnime] = useState<Anime | null>(null);
 
-  useEffect(() => {
-    const fetchHeroBanner = async () => {
-      try {
-        const res = await axios.get(
-          "https://api.jikan.moe/v4/top/anime?limit=1",
-        );
-        setAnime(res.data.data[0]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchHeroBanner();
-  }, []);
+  // useEffect(() => {
+  //   const fetchHeroBanner = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         "https://api.jikan.moe/v4/top/anime?limit=1",
+  //       );
+  //       setAnime(res.data.data[0]);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchHeroBanner();
+  // }, []);
 
   return (
     <div className="relative h-[500px] overflow-hidden rounded-2xl mb-8">
@@ -65,7 +46,7 @@ export function HeroSection() {
               RECOMMENDED
             </span>
             <span className="px-4 py-1.5 bg-green-500/20 text-green-400 text-sm font-medium rounded-full border border-green-500/30">
-              {anime?.status}
+              {anime?.status === "Currently Airing" ? "Airing" : anime?.status}
             </span>
           </div>
           {/* Title */}
@@ -84,9 +65,9 @@ export function HeroSection() {
               {anime?.year ?? anime?.aired?.prop?.from?.year ?? "TBA"}
             </span>
             <span>•</span>
-            <span>{anime?.genres.map((g) => g.name).join(", ")}</span>
+            <span>{anime?.genres?.map((g) => g.name).join(", ")}</span>
             <span>•</span>
-            <span>{anime?.episodes} Episodes</span>
+            <span>{anime?.episodes ?? "?"} Episodes</span>
           </div>
 
           {/* Description */}

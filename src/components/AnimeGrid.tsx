@@ -5,19 +5,7 @@ import { AnimeDetailModal } from "./AnimeDetailModal";
 import type { AnimeDetails } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
 import axios from "axios";
-
-interface Anime {
-  id: number;
-  title: string;
-  image: string;
-  rating: number;
-  status: "Airing" | "Completed" | "Upcoming";
-  episodes?: number;
-  description?: string;
-  genres?: string[];
-  year?: number;
-  studio?: string;
-}
+import type { JikanAnime, Anime } from "../types/types";
 
 export function AnimeGrid() {
   const [animeData, setAnimeData] = useState<Anime[]>([]);
@@ -26,6 +14,7 @@ export function AnimeGrid() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
   const itemsPerPage = 8;
   const totalPages = Math.ceil(animeData.length / itemsPerPage);
+  const [heroAnime, setHeroAnime] = useState<JikanAnime | null>(null);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -57,7 +46,11 @@ export function AnimeGrid() {
         const res = await axios.get(
           "https://api.jikan.moe/v4/seasons/now?limit=24",
         );
-        const data = res.data.data.map((anime: any) => ({
+        const sorted = res.data.data.sort(
+          (a: JikanAnime, b: JikanAnime) => (b.score ?? 0) - (a.score ?? 0),
+        );
+        setHeroAnime(sorted[0]);
+        const data = res.data.data.map((anime: JikanAnime) => ({
           id: anime.mal_id,
           title: anime.title,
           image: anime.images.jpg.large_image_url,
@@ -90,7 +83,7 @@ export function AnimeGrid() {
   return (
     <div className="p-6">
       {/*Herosection*/}
-      <HeroSection />
+      <HeroSection anime={heroAnime} />
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-zinc-100 mb-2">
