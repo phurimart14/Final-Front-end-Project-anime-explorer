@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HeroSection } from "./HeroSection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimeDetailModal } from "./AnimeDetailModal";
 import type { AnimeDetails } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
+import axios from "axios";
 
 interface Anime {
   id: number;
@@ -18,9 +19,9 @@ interface Anime {
   studio?: string;
 }
 
-const animeData: Anime[] = [];
-
 export function AnimeGrid() {
+  const [animeData, setAnimeData] = useState<Anime[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
   const itemsPerPage = 8;
@@ -49,6 +50,42 @@ export function AnimeGrid() {
   const handleCloseModal = () => {
     setSelectedAnime(null);
   };
+
+  useEffect(() => {
+    const fetchAnime = async () => {
+      try {
+        const res = await axios.get(
+          "https://api.jikan.moe/v4/seasons/now?limit=24",
+        );
+        const data = res.data.data.map((anime: any) => ({
+          id: anime.mal_id,
+          title: anime.title,
+          image: anime.images.jpg.large_image_url,
+          rating: anime.score ?? 0,
+          status: anime.status === "Currently Airing" ? "Airing" : "Completed",
+          episodes: anime.episodes,
+          description: anime.synopsis,
+          genres: anime.genres.map((g: any) => g.name),
+          year: anime.year ?? anime.aired?.prop?.from?.year,
+          studio: anime.studios?.[0]?.name,
+        }));
+        setAnimeData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnime();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center h-screen">
+        <div className="text-zinc-400 font-bold text-5xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
