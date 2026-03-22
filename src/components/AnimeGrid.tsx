@@ -7,18 +7,39 @@ import { AnimeCard } from "./AnimeCard";
 import axios from "axios";
 import type { JikanAnime, Anime } from "../types/types";
 
-export function AnimeGrid() {
+interface AnimeGridProps {
+  searchQuery: string;
+  filterGenres: string[];
+}
+
+export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
   const [animeData, setAnimeData] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  const itemsPerPage = 8;
-  const totalPages = Math.ceil(animeData.length / itemsPerPage);
+
   const [heroAnime, setHeroAnime] = useState<JikanAnime | null>(null);
 
+  const filteredAnime = animeData.filter((anime) => {
+    // เช็ค search query
+    const matchSearch = searchQuery
+      ? anime.title.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+
+    const matchGenre =
+      filterGenres.length > 0
+        ? filterGenres.every((g) => anime.genres?.includes(g))
+        : true;
+    return matchSearch && matchGenre;
+  });
+
+  const itemsPerPage = 8;
+  const totalPages = Math.ceil(filteredAnime.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentAnime = animeData.slice(startIndex, endIndex);
+  const currentAnime = filteredAnime.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   const handlePrevious = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -43,34 +64,63 @@ export function AnimeGrid() {
   useEffect(() => {
     const fetchAnime = async () => {
       try {
-        const res = await axios.get(
-          "https://api.jikan.moe/v4/seasons/now?limit=24",
-        );
-        const sorted = res.data.data.sort(
-          (a: JikanAnime, b: JikanAnime) => (b.score ?? 0) - (a.score ?? 0),
-        );
-        setHeroAnime(sorted[0]);
-        const data = res.data.data.map((anime: JikanAnime) => ({
-          id: anime.mal_id,
-          title: anime.title,
-          image: anime.images.jpg.large_image_url,
-          rating: anime.score ?? 0,
-          status: anime.status === "Currently Airing" ? "Airing" : "Completed",
-          episodes: anime.episodes,
-          description: anime.synopsis,
-          genres: anime.genres.map((g: any) => g.name),
-          year: anime.year ?? anime.aired?.prop?.from?.year,
-          studio: anime.studios?.[0]?.name,
-        }));
-        setAnimeData(data);
+        setLoading(true);
+        if (searchQuery) {
+          // ถ้ามี searchQuery → ยิง search API
+          const res = await axios.get(
+            `https://api.jikan.moe/v4/anime?q=${searchQuery}&limit=24&order_by=score&sort=desc`,
+          );
+          const data = res.data.data.map((anime: JikanAnime) => ({
+            id: anime.mal_id,
+            title: anime.title,
+            image: anime.images.jpg.large_image_url,
+            rating: anime.score ?? 0,
+            status:
+              anime.status === "Currently Airing" ? "Airing" : "Completed",
+            episodes: anime.episodes,
+            description: anime.synopsis,
+            genres: anime.genres.map((g: any) => g.name),
+            year: anime.year ?? anime.aired?.prop?.from?.year,
+            studio: anime.studios?.[0]?.name,
+          }));
+          setAnimeData(data);
+        } else {
+          // ถ้าไม่มี searchQuery → ดึง popular season
+          const res = await axios.get(
+            "https://api.jikan.moe/v4/seasons/now?limit=24",
+          );
+          const sorted = res.data.data.sort(
+            (a: JikanAnime, b: JikanAnime) => (b.score ?? 0) - (a.score ?? 0),
+          );
+          setHeroAnime(sorted[0]);
+          const data = res.data.data.map((anime: JikanAnime) => ({
+            id: anime.mal_id,
+            title: anime.title,
+            image: anime.images.jpg.large_image_url,
+            rating: anime.score ?? 0,
+            status:
+              anime.status === "Currently Airing" ? "Airing" : "Completed",
+            episodes: anime.episodes,
+            description: anime.synopsis,
+            genres: anime.genres.map((g: any) => g.name),
+            year: anime.year ?? anime.aired?.prop?.from?.year,
+            studio: anime.studios?.[0]?.name,
+          }));
+          setAnimeData(data);
+        }
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    fetchAnime();
-  }, []);
+    const debounce = setTimeout(fetchAnime, 500);
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterGenres]);
 
   if (loading) {
     return (
@@ -83,14 +133,21 @@ export function AnimeGrid() {
   return (
     <div className="p-6">
       {/*Herosection*/}
-      <HeroSection anime={heroAnime} />
+      {/* ซ่อน Hero เมื่อมี search หรือ filter */}
+      {!searchQuery && filterGenres.length === 0 && (
+        <HeroSection anime={heroAnime} />
+      )}
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-zinc-100 mb-2">
-          Popular This Season
+          {searchQuery || filterGenres.length > 0
+            ? `Results (${filteredAnime.length})`
+            : "Popular This Season"}
         </h2>
         <p className="text-zinc-500">
-          Discover the most watched anime right now
+          {searchQuery || filterGenres.length > 0
+            ? `Showing results for "${searchQuery}"`
+            : "Discover the most watched anime right now"}
         </p>
       </div>
 

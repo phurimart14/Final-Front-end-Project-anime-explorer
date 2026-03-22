@@ -7,7 +7,12 @@ type Genre = {
   name: string;
 };
 
-export function SearchBar() {
+interface SearchBarProps {
+  onSearch: (query: string) => void;
+  onFilter: (genres: string[]) => void;
+}
+
+export function SearchBar({ onSearch, onFilter }: SearchBarProps) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -43,6 +48,7 @@ export function SearchBar() {
           <input
             type="text"
             placeholder="Search anime..."
+            onChange={(e) => onSearch(e.target.value)}
             className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-12 pr-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
           />
         </div>
@@ -132,7 +138,10 @@ export function SearchBar() {
           {/* Apply Button */}
           <div className="mt-6 flex justify-end">
             <button
-              onClick={() => setIsFilterOpen(false)}
+              onClick={() => {
+                onFilter(selectedGenres);
+                setIsFilterOpen(false);
+              }}
               className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition-all"
             >
               Apply Filters
