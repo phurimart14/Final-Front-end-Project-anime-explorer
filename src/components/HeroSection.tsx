@@ -16,6 +16,13 @@ type Anime = {
       large_image_url: string;
     };
   };
+  aired: {
+    prop: {
+      from: {
+        year: number | null;
+      };
+    };
+  };
 };
 
 export function HeroSection() {
@@ -73,7 +80,9 @@ export function HeroSection() {
               <span className="font-semibold">{anime?.score}</span>
             </div>
             <span>•</span>
-            <span>{anime?.year}</span>
+            <span>
+              {anime?.year ?? anime?.aired?.prop?.from?.year ?? "TBA"}
+            </span>
             <span>•</span>
             <span>{anime?.genres.map((g) => g.name).join(", ")}</span>
             <span>•</span>
