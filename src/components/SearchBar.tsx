@@ -1,4 +1,4 @@
-import { Search, Filter, Bell, Menu, X } from "lucide-react";
+import { Search, Filter, Bell, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -13,13 +13,16 @@ export function SearchBar() {
   const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    axios
-      .get("https://api.jikan.moe/v4/genres/anime")
-      .then((res) => {
+    const fetchGenres = async () => {
+      try {
+        const res = await axios.get("https://api.jikan.moe/v4/genres/anime");
         const filtered = res.data.data.filter((g: Genre) => g.mal_id <= 43);
         setGenres(filtered);
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchGenres();
   }, []);
 
   const toggleGenre = (genre: string) => {
@@ -35,10 +38,6 @@ export function SearchBar() {
   return (
     <div className="relative bg-zinc-950 border-b border-zinc-800 px-6 py-4 sticky top-0 z-10">
       <div className="flex items-center gap-4">
-        <button className="md:hidden text-zinc-400 hover:text-zinc-100">
-          <Menu className="w-6 h-6" />
-        </button>
-
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
           <input
