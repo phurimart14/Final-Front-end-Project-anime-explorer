@@ -1,11 +1,14 @@
 import { Play, Star, Clock, Heart } from "lucide-react";
-import type { JikanAnime } from "../types";
+import type { JikanAnime } from "../types/types";
+import { useState } from "react";
 
 interface HeroSectionProps {
   anime: JikanAnime | null;
 }
 
 export function HeroSection({ anime }: HeroSectionProps) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isWatchLater, setIsWatchLater] = useState(false);
   //ดึงrequestซ้ำกัน
   // const [anime, setAnime] = useState<Anime | null>(null);
 
@@ -77,15 +80,41 @@ export function HeroSection({ anime }: HeroSectionProps) {
 
           {/* Buttons */}
           <div className="flex items-center gap-4">
+            {/* watch button */}
             <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg flex items-center gap-2 transition-all transform hover:scale-105">
               <Play className="w-5 h-5 fill-current" />
               Watch Now
             </button>
-            <button className="p-3 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-purple-400 rounded-lg transition-all">
-              <Heart className="w-5 h-5" />
+            {/* Heart Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsFavorite(!isFavorite);
+              }}
+              className={` p-3 rounded-lg backdrop-blur-sm border transition-all ${
+                isFavorite
+                  ? "bg-pink-600 border-pink-500 text-white"
+                  : "bg-zinc-900/80 border-zinc-700 text-zinc-300 hover:text-pink-400 hover:border-pink-500/50"
+              } `}
+            >
+              <Heart
+                className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`}
+              />
             </button>
-            <button className="p-3 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-purple-400 rounded-lg transition-all">
-              <Clock className="w-5 h-5" />
+
+            {/* Watch Later Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsWatchLater(!isWatchLater);
+              }}
+              className={`p-3 rounded-lg transition-all backdrop-blur-sm border ${
+                isWatchLater
+                  ? "bg-cyan-600 border-cyan-500 text-white"
+                  : "bg-zinc-900/80 border-zinc-700 text-zinc-300 hover:text-cyan-400 hover:border-cyan-500/50"
+              }`}
+            >
+              <Clock className={`w-5 h-5 ${isWatchLater}`} />
             </button>
           </div>
         </div>
