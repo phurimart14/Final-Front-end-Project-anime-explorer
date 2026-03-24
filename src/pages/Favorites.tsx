@@ -9,7 +9,7 @@ export function Favorite() {
   const [favoriteAnime, setFavoriteAnime] = useState<AnimeDetails[]>([]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 mt-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
@@ -48,7 +48,30 @@ export function Favorite() {
               </p>
             </div>
           </div>
+
+          {/* Favorites Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {favoriteAnime.map((anime) => (
+              <AnimeCard
+                key={anime.id}
+                title={anime.title}
+                image={anime.image}
+                rating={anime.rating}
+                status={anime.status}
+                episodes={anime.episodes}
+                onClick={() => setSelectedAnime(anime)}
+              />
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Anime Detail Modal */}
+      {selectedAnime && (
+        <AnimeDetailModal
+          anime={selectedAnime}
+          onClose={() => setSelectedAnime(null)}
+        />
       )}
     </div>
   );

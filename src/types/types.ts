@@ -10,6 +10,7 @@ export interface JikanAnime {
   images: { jpg: { large_image_url: string } };
   aired: { prop: { from: { year: number | null } } };
   studios: { name: string }[];
+  members: number;
 }
 
 export interface AnimeDetails {
@@ -23,5 +24,11 @@ export interface AnimeDetails {
   genres?: string[];
   year?: number;
   studio?: string;
+  members?: number;
 }
 
+
+export interface AnimeGridProps {
+  searchQuery: string;
+  filterGenres: string[];
+}

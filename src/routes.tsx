@@ -5,6 +5,8 @@ import { WatchLater } from "./pages/WatchLater";
 import { Favorite } from "./pages/Favorites";
 import { RootLayout } from "./layouts/RootLayout";
 
+
+
 export const router = createBrowserRouter([
   {
     path: "/",

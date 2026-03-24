@@ -45,7 +45,7 @@ export function AnimeDetailModal({ anime, onClose }: AnimeDetailModalProps) {
             <img
               src={anime.image}
               alt={anime.title}
-              className="w-full h-full object-cover "
+              className="w-full h-full object-cover aspect-[16/9] "
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
             {/* Close Button */}
