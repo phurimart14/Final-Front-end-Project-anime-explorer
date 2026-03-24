@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { HeroSection } from "./HeroSection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimeDetailModal } from "./AnimeDetailModal";
-import type { AnimeDetails } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
 import axios from "axios";
-import type { JikanAnime, Anime } from "../types/types";
+import type { JikanAnime, AnimeDetails } from "../types/types";
 
 interface AnimeGridProps {
   searchQuery: string;
@@ -13,7 +12,7 @@ interface AnimeGridProps {
 }
 
 export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
-  const [animeData, setAnimeData] = useState<Anime[]>([]);
+  const [animeData, setAnimeData] = useState<AnimeDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
@@ -53,7 +52,7 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
     setCurrentPage(page);
   };
 
-  const handleAnimeClick = (anime: Anime) => {
+  const handleAnimeClick = (anime: AnimeDetails) => {
     setSelectedAnime(anime);
   };
 

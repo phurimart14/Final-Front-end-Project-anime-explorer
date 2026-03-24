@@ -12,7 +12,7 @@ export interface JikanAnime {
   studios: { name: string }[];
 }
 
-export interface Anime {
+export interface AnimeDetails {
   id: number;
   title: string;
   image: string;
@@ -24,3 +24,4 @@ export interface Anime {
   year?: number;
   studio?: string;
 }
+

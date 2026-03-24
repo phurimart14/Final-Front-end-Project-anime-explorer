@@ -1,13 +1,12 @@
 import { AnimeCard } from "../components/AnimeCard";
 import { AnimeDetailModal } from "../components/AnimeDetailModal";
-import type { AnimeDetails } from "../components/AnimeDetailModal";
-import type { JikanAnime, Anime } from "../types/types";
+import type { AnimeDetails } from "../types/types";
 import { Heart, AlertCircle } from "lucide-react";
 import { useState } from "react";
 
 export function Favorite() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  const [favoriteAnime, setFavoriteAnime] = useState<Anime[]>([]);
+  const [favoriteAnime, setFavoriteAnime] = useState<AnimeDetails[]>([]);
 
   return (
     <div className="p-6">
