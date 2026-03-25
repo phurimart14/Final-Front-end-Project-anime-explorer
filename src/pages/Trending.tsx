@@ -2,10 +2,10 @@ import { AnimeCard } from "../components/AnimeCard";
 import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import { TrendingUp, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { JikanAnime, AnimeDetails } from "../types/types";
-import axios from "axios";
+import type { AnimeDetails } from "../types/types";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
+import { fetchTrendingAnime, jikanToAnime } from "../services/animeService";
 
 export function Trending() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
@@ -55,51 +55,32 @@ export function Trending() {
   useEffect(() => {
     const fetchAnime = async () => {
       try {
-        const res = await axios.get("https://api.jikan.moe/v4/top/anime");
-        const data = res.data.data.map((anime: JikanAnime) => ({
-          id: anime.mal_id,
-          title: anime.title,
-          image: anime.images.jpg.large_image_url,
-          rating: anime.score ?? 0,
-          status: anime.status === "Currently Airing" ? "Airing" : "Completed",
-          episodes: anime.episodes,
-          description: anime.synopsis,
-          genres: anime.genres.map((g: any) => g.name),
-          year: anime.year ?? anime.aired?.prop?.from?.year,
-          studio: anime.studios?.[0]?.name,
-          members: anime.members ?? 0,
-        }));
-        setTrendingAnime(data);
+        const data = await fetchTrendingAnime();
+        const mapped = data.map(jikanToAnime);
+        setTrendingAnime(mapped);
 
-        if (data.length > 0) {
+        if (mapped.length > 0) {
           // 1. กรองเอาเฉพาะตัวที่มีคะแนน (ป้องกันคะแนน 0 มาดึงค่าเฉลี่ยลงเกินไป)
-          const ratedAnime = data.filter(
-            (item: AnimeDetails) => item.rating > 0,
-          );
-
+          const ratedAnime = mapped.filter((item) => item.rating > 0);
           if (ratedAnime.length > 0) {
             const total = ratedAnime.reduce(
-              (acc: number, curr: AnimeDetails) => acc + curr.rating,
+              (acc, curr) => acc + curr.rating,
               0,
             );
-            const avg = (total / ratedAnime.length).toFixed(1);
-            setAverageRating(avg);
+            setAverageRating((total / ratedAnime.length).toFixed(1));
           } else {
-            setAverageRating("N/A"); // กรณีไม่มีตัวไหนมีคะแนนเลย
+            setAverageRating("N/A");
           }
-        }
-        if (data.length > 0) {
-          const totalMembers = data.reduce(
-            (acc: number, curr: any) => acc + curr.members,
+
+          const totalMembers = mapped.reduce(
+            (acc, curr) => acc + (curr.members ?? 0),
             0,
           );
-
-          // แปลงเลขหลักล้านให้มี M ต่อท้าย (เช่น 2400000 -> 2.4M)
           const formattedViews =
             totalMembers >= 1000000
-              ? (totalMembers / 1000000).toFixed(1) + "M"
+              ? // แปลงเลขหลักล้านให้มี M ต่อท้าย (เช่น 2400000 -> 2.4M)
+                (totalMembers / 1000000).toFixed(1) + "M"
               : (totalMembers / 1000).toFixed(1) + "K";
-
           setTotalViews(formattedViews);
         }
       } catch (error) {

@@ -3,10 +3,14 @@ import { HeroSection } from "./HeroSection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimeDetailModal } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
-import axios from "axios";
 import type { JikanAnime, AnimeDetails } from "../types/types";
 import { toast } from "sonner";
 import { useOutletContext } from "react-router-dom";
+import {
+  fetchSeasonNow,
+  fetchSearchAnime,
+  jikanToAnime,
+} from "../services/animeService";
 
 interface AnimeGridProps {
   searchQuery: string;
@@ -84,46 +88,14 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
         setLoading(true);
         if (searchQuery) {
           // ถ้ามี searchQuery → ยิง search API
-          const res = await axios.get(
-            `https://api.jikan.moe/v4/anime?q=${searchQuery}&limit=24&order_by=score&sort=desc`,
-          );
-          const data = res.data.data.map((anime: JikanAnime) => ({
-            id: anime.mal_id,
-            title: anime.title,
-            image: anime.images.jpg.large_image_url,
-            rating: anime.score ?? 0,
-            status:
-              anime.status === "Currently Airing" ? "Airing" : "Completed",
-            episodes: anime.episodes,
-            description: anime.synopsis,
-            genres: anime.genres.map((g: any) => g.name),
-            year: anime.year ?? anime.aired?.prop?.from?.year,
-            studio: anime.studios?.[0]?.name,
-          }));
-          setAnimeData(data);
+          const data = await fetchSearchAnime(searchQuery);
+          setAnimeData(data.map(jikanToAnime));
         } else {
           // ถ้าไม่มี searchQuery → ดึง popular season
-          const res = await axios.get(
-            "https://api.jikan.moe/v4/seasons/now?limit=24",
-          );
-          const sorted = res.data.data.sort(
-            (a: JikanAnime, b: JikanAnime) => (b.score ?? 0) - (a.score ?? 0),
-          );
+          const data = await fetchSeasonNow();
+          const sorted = data.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
           setHeroAnime(sorted[0]);
-          const data = res.data.data.map((anime: JikanAnime) => ({
-            id: anime.mal_id,
-            title: anime.title,
-            image: anime.images.jpg.large_image_url,
-            rating: anime.score ?? 0,
-            status:
-              anime.status === "Currently Airing" ? "Airing" : "Completed",
-            episodes: anime.episodes,
-            description: anime.synopsis,
-            genres: anime.genres.map((g: any) => g.name),
-            year: anime.year ?? anime.aired?.prop?.from?.year,
-            studio: anime.studios?.[0]?.name,
-          }));
-          setAnimeData(data);
+          setAnimeData(sorted.map(jikanToAnime));
         }
       } catch (error) {
         console.error(error);
