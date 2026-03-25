@@ -152,7 +152,59 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
       {/*Herosection*/}
       {/* ซ่อน Hero เมื่อมี search หรือ filter */}
       {!searchQuery && filterGenres.length === 0 && (
-        <HeroSection anime={heroAnime} />
+        <HeroSection
+          anime={heroAnime}
+          isFavorite={heroAnime ? isFavorite(heroAnime.mal_id) : false}
+          isWatchLater={heroAnime ? isWatchLater(heroAnime.mal_id) : false}
+          onFavorite={() => {
+            if (!heroAnime) return;
+            const anime: AnimeDetails = {
+              id: heroAnime.mal_id,
+              title: heroAnime.title,
+              image: heroAnime.images.jpg.large_image_url,
+              rating: heroAnime.score,
+              status:
+                heroAnime.status === "Currently Airing"
+                  ? "Airing"
+                  : "Completed",
+              episodes: heroAnime.episodes ?? undefined,
+              description: heroAnime.synopsis,
+              genres: heroAnime.genres.map((g) => g.name),
+              year: heroAnime.year ?? undefined,
+              studio: heroAnime.studios?.[0]?.name,
+            };
+            isFavorite(heroAnime.mal_id)
+              ? removeFavorite(heroAnime.mal_id)
+              : addFavorite(anime);
+            isFavorite(heroAnime.mal_id)
+              ? toast.error(`Removed "${heroAnime.title}" from favorites`)
+              : toast.success(`Added "${heroAnime.title}" to favorites`);
+          }}
+          onWatchLater={() => {
+            if (!heroAnime) return;
+            const anime: AnimeDetails = {
+              id: heroAnime.mal_id,
+              title: heroAnime.title,
+              image: heroAnime.images.jpg.large_image_url,
+              rating: heroAnime.score,
+              status:
+                heroAnime.status === "Currently Airing"
+                  ? "Airing"
+                  : "Completed",
+              episodes: heroAnime.episodes ?? undefined,
+              description: heroAnime.synopsis,
+              genres: heroAnime.genres.map((g) => g.name),
+              year: heroAnime.year ?? undefined,
+              studio: heroAnime.studios?.[0]?.name,
+            };
+            isWatchLater(heroAnime.mal_id)
+              ? removeWatchLater(heroAnime.mal_id)
+              : addWatchLater(anime);
+            isWatchLater(heroAnime.mal_id)
+              ? toast.error(`Removed "${heroAnime.title}" from watch later`)
+              : toast.success(`Added "${heroAnime.title}" to watch later`);
+          }}
+        />
       )}
 
       <div className="mb-6">

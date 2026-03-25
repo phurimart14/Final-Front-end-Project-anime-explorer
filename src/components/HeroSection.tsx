@@ -1,14 +1,22 @@
 import { Play, Star, Clock, Heart } from "lucide-react";
-import type { JikanAnime } from "../types/types";
+import type { JikanAnime, AnimeDetails } from "../types/types";
 import { useState } from "react";
 
 interface HeroSectionProps {
   anime: JikanAnime | null;
+  isFavorite: boolean;
+  isWatchLater: boolean;
+  onFavorite: () => void;
+  onWatchLater: () => void;
 }
 
-export function HeroSection({ anime }: HeroSectionProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isWatchLater, setIsWatchLater] = useState(false);
+export function HeroSection({
+  anime,
+  isFavorite,
+  isWatchLater,
+  onFavorite,
+  onWatchLater,
+}: HeroSectionProps) {
   //ดึงrequestซ้ำกัน
   // const [anime, setAnime] = useState<Anime | null>(null);
 
@@ -87,10 +95,7 @@ export function HeroSection({ anime }: HeroSectionProps) {
             </button>
             {/* Heart Button */}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsFavorite(!isFavorite);
-              }}
+              onClick={onFavorite}
               className={` p-3 rounded-lg backdrop-blur-sm border transition-all ${
                 isFavorite
                   ? "bg-pink-600 border-pink-500 text-white"
@@ -104,10 +109,7 @@ export function HeroSection({ anime }: HeroSectionProps) {
 
             {/* Watch Later Button */}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsWatchLater(!isWatchLater);
-              }}
+              onClick={onWatchLater}
               className={`p-3 rounded-lg transition-all backdrop-blur-sm border ${
                 isWatchLater
                   ? "bg-cyan-600 border-cyan-500 text-white"
