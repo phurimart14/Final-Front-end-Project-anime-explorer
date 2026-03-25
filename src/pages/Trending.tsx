@@ -4,6 +4,8 @@ import { TrendingUp, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { JikanAnime, AnimeDetails } from "../types/types";
 import axios from "axios";
+import { useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Trending() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
@@ -12,6 +14,22 @@ export function Trending() {
   const [currentPage, setCurrentPage] = useState(1);
   const [averageRating, setAverageRating] = useState<string>("0");
   const [totalViews, setTotalViews] = useState<string>("0");
+
+  const {
+    addFavorite,
+    removeFavorite,
+    addWatchLater,
+    removeWatchLater,
+    isFavorite,
+    isWatchLater,
+  } = useOutletContext<{
+    addFavorite: (anime: AnimeDetails) => void;
+    removeFavorite: (id: number) => void;
+    addWatchLater: (anime: AnimeDetails) => void;
+    removeWatchLater: (id: number) => void;
+    isFavorite: (id: number) => boolean;
+    isWatchLater: (id: number) => boolean;
+  }>();
 
   const handlePrevious = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -52,6 +70,7 @@ export function Trending() {
           members: anime.members ?? 0,
         }));
         setTrendingAnime(data);
+
         if (data.length > 0) {
           // 1. กรองเอาเฉพาะตัวที่มีคะแนน (ป้องกันคะแนน 0 มาดึงค่าเฉลี่ยลงเกินไป)
           const ratedAnime = data.filter(
@@ -89,8 +108,7 @@ export function Trending() {
         setLoading(false);
       }
     };
-    const debounce = setTimeout(fetchAnime, 500);
-    return () => clearTimeout(debounce);
+    fetchAnime();
   }, []);
 
   if (loading) {
@@ -155,6 +173,26 @@ export function Trending() {
               rating={anime.rating}
               status={anime.status}
               episodes={anime.episodes}
+              isFavorite={isFavorite(anime.id)}
+              isWatchLater={isWatchLater(anime.id)}
+              onFavorite={() => {
+                if (isFavorite(anime.id)) {
+                  removeFavorite(anime.id);
+                  toast.error(`Removed "${anime.title}" from favorites`);
+                } else {
+                  addFavorite(anime);
+                  toast.success(`Added "${anime.title}" to favorites`);
+                }
+              }}
+              onWatchLater={() => {
+                if (isWatchLater(anime.id)) {
+                  removeWatchLater(anime.id);
+                  toast.error(`Removed "${anime.title}" from watch later`);
+                } else {
+                  addWatchLater(anime);
+                  toast.success(`Added "${anime.title}" to watch later`);
+                }
+              }}
               onClick={() => setSelectedAnime(anime)}
             />
           </div>

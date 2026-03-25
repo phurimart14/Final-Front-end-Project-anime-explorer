@@ -5,6 +5,8 @@ import { AnimeDetailModal } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
 import axios from "axios";
 import type { JikanAnime, AnimeDetails } from "../types/types";
+import { toast } from "sonner";
+import { useOutletContext } from "react-router-dom";
 
 interface AnimeGridProps {
   searchQuery: string;
@@ -16,6 +18,22 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
+
+  const {
+    addFavorite,
+    removeFavorite,
+    addWatchLater,
+    removeWatchLater,
+    isFavorite,
+    isWatchLater,
+  } = useOutletContext<{
+    addFavorite: (anime: AnimeDetails) => void;
+    removeFavorite: (id: number) => void;
+    addWatchLater: (anime: AnimeDetails) => void;
+    removeWatchLater: (id: number) => void;
+    isFavorite: (id: number) => boolean;
+    isWatchLater: (id: number) => boolean;
+  }>();
 
   const [heroAnime, setHeroAnime] = useState<JikanAnime | null>(null);
 
@@ -160,6 +178,26 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
             rating={anime.rating}
             status={anime.status}
             episodes={anime.episodes}
+            isFavorite={isFavorite(anime.id)}
+            isWatchLater={isWatchLater(anime.id)}
+            onFavorite={() => {
+              if (isFavorite(anime.id)) {
+                removeFavorite(anime.id);
+                toast.error(`Removed "${anime.title}" from favorites`);
+              } else {
+                addFavorite(anime);
+                toast.success(`Added "${anime.title}" to favorites`);
+              }
+            }}
+            onWatchLater={() => {
+              if (isWatchLater(anime.id)) {
+                removeWatchLater(anime.id);
+                toast.error(`Removed "${anime.title}" from watch later`);
+              } else {
+                addWatchLater(anime);
+                toast.success(`Added "${anime.title}" to watch later`);
+              }
+            }}
             onClick={() => handleAnimeClick(anime)}
           />
         ))}

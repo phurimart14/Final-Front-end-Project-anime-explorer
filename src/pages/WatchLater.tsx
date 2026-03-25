@@ -3,10 +3,25 @@ import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import type { AnimeDetails } from "../types/types";
 import { Clock, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 
 export function WatchLater() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  const [watchLaterAnime, setWatchLaterAnime] = useState<AnimeDetails[]>([]);
+  // const [watchLaterAnime, setWatchLaterAnime] = useState<AnimeDetails[]>([]);
+  const {
+    watchLater,
+    addFavorite,
+    removeWatchLater,
+    isFavorite,
+    isWatchLater,
+  } = useOutletContext<{
+    watchLater: AnimeDetails[];
+    addFavorite: (anime: AnimeDetails) => void;
+    removeWatchLater: (id: number) => void;
+    isFavorite: (id: number) => boolean;
+    isWatchLater: (id: number) => boolean;
+  }>();
 
   return (
     <div className="p-6">
@@ -24,7 +39,7 @@ export function WatchLater() {
       </div>
 
       {/* Empty State or Content */}
-      {watchLaterAnime.length === 0 ? (
+      {watchLater.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <div className="p-6 bg-zinc-900 rounded-full mb-6">
             <AlertCircle className="w-12 h-12 text-zinc-600" />
@@ -44,7 +59,7 @@ export function WatchLater() {
             <Clock className="w-5 h-5 text-cyan-400" />
             <div>
               <p className="text-zinc-100 font-medium">
-                You have {watchLaterAnime.length} anime in your watch later list
+                You have {watchLater.length} anime in your watch later list
               </p>
               <p className="text-zinc-400 text-sm">
                 Keep track of anime you want to watch
@@ -54,7 +69,7 @@ export function WatchLater() {
 
           {/* Watch Later Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {watchLaterAnime.map((anime) => (
+            {watchLater.map((anime) => (
               <AnimeCard
                 key={anime.id}
                 title={anime.title}
@@ -62,6 +77,14 @@ export function WatchLater() {
                 rating={anime.rating}
                 status={anime.status}
                 episodes={anime.episodes}
+                isFavorite={isFavorite(anime.id)}
+                isWatchLater={isWatchLater(anime.id)}
+                onFavorite={() =>
+                  isFavorite(anime.id) ? undefined : addFavorite(anime)
+                }
+                onWatchLater={() => {removeWatchLater(anime.id);
+                  toast.error(`Removed "${anime.title}" from watch later`);
+                }}
                 onClick={() => setSelectedAnime(anime)}
               />
             ))}

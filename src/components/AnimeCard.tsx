@@ -7,6 +7,10 @@ interface AnimeCardProps {
   rating: number;
   status: "Airing" | "Completed" | "Upcoming";
   episodes?: number;
+  isFavorite?: boolean; // ← เพิ่ม
+  isWatchLater?: boolean; // ← เพิ่ม
+  onFavorite?: () => void; // ← เพิ่ม
+  onWatchLater?: () => void; // ← เพิ่ม
   onClick?: () => void;
 }
 export function AnimeCard({
@@ -15,10 +19,14 @@ export function AnimeCard({
   rating,
   status,
   episodes,
+  isFavorite, // ← เพิ่ม
+  isWatchLater, // ← เพิ่ม
+  onFavorite, // ← เพิ่ม
+  onWatchLater, // ← เพิ่ม
   onClick,
 }: AnimeCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isWatchLater, setIsWatchLater] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
+  // const [isWatchLater, setIsWatchLater] = useState(false); ไม่ได้ใช้เพราะรับเป็น prop มาแล้ว
 
   const statusColors = {
     Airing: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -51,7 +59,7 @@ export function AnimeCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setIsFavorite(!isFavorite);
+              onFavorite?.();
             }}
             className={`p-2 rounded-lg backdrop-blur-sm border transition-all ${
               isFavorite
@@ -64,7 +72,7 @@ export function AnimeCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setIsWatchLater(!isWatchLater);
+              onWatchLater?.();
             }}
             className={`p-2 rounded-lg backdrop-blur-sm border transition-all ${
               isWatchLater

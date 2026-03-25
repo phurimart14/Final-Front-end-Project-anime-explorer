@@ -3,10 +3,27 @@ import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import type { AnimeDetails } from "../types/types";
 import { Heart, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Favorite() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  const [favoriteAnime, setFavoriteAnime] = useState<AnimeDetails[]>([]);
+  // const [favoriteAnime, setFavoriteAnime] = useState<AnimeDetails[]>([]);
+  const {
+    favorites,
+    removeFavorite,
+    addWatchLater,
+    removeWatchLater,
+    isFavorite,
+    isWatchLater,
+  } = useOutletContext<{
+    favorites: AnimeDetails[];
+    removeFavorite: (id: number) => void;
+    addWatchLater: (anime: AnimeDetails) => void;
+    removeWatchLater: (id: number) => void;
+    isFavorite: (id: number) => boolean;
+    isWatchLater: (id: number) => boolean;
+  }>();
 
   return (
     <div className="p-6 mt-8">
@@ -22,7 +39,7 @@ export function Favorite() {
       </div>
 
       {/* Empty State or Content */}
-      {favoriteAnime.length === 0 ? (
+      {favorites.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <div className="p-6 bg-zinc-900 rounded-full mb-6">
             <AlertCircle className="w-12 h-12 text-zinc-600" />
@@ -41,7 +58,7 @@ export function Favorite() {
             <Heart className="w-5 h-5 text-pink-400 fill-current" />
             <div>
               <p className="text-zinc-100 font-medium">
-                You have {favoriteAnime.length} favorite anime
+                You have {favorites.length} favorite anime
               </p>
               <p className="text-zinc-400 text-sm">
                 Your curated collection of the best anime
@@ -51,7 +68,7 @@ export function Favorite() {
 
           {/* Favorites Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {favoriteAnime.map((anime) => (
+            {favorites.map((anime) => (
               <AnimeCard
                 key={anime.id}
                 title={anime.title}
@@ -59,6 +76,17 @@ export function Favorite() {
                 rating={anime.rating}
                 status={anime.status}
                 episodes={anime.episodes}
+                isFavorite={isFavorite(anime.id)}
+                isWatchLater={isWatchLater(anime.id)}
+                onFavorite={() => {
+                  removeFavorite(anime.id);
+                  toast.error(`Removed "${anime.title}" from favorites`);
+                }}
+                onWatchLater={() =>
+                  isWatchLater(anime.id)
+                    ? removeWatchLater(anime.id)
+                    : addWatchLater(anime)
+                }
                 onClick={() => setSelectedAnime(anime)}
               />
             ))}
