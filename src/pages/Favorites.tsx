@@ -26,7 +26,7 @@ export function Favorite() {
   }>();
 
   return (
-    <div className="p-6 mt-8">
+    <div className="p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
