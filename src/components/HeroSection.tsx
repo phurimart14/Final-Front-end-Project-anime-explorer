@@ -1,6 +1,5 @@
 import { Play, Star, Clock, Heart } from "lucide-react";
-import type { JikanAnime, AnimeDetails } from "../types/types";
-import { useState } from "react";
+import type { JikanAnime } from "../types/types";
 
 interface HeroSectionProps {
   anime: JikanAnime | null;
@@ -17,23 +16,6 @@ export function HeroSection({
   onFavorite,
   onWatchLater,
 }: HeroSectionProps) {
-  //ดึงrequestซ้ำกัน
-  // const [anime, setAnime] = useState<Anime | null>(null);
-
-  // useEffect(() => {
-  //   const fetchHeroBanner = async () => {
-  //     try {
-  //       const res = await axios.get(
-  //         "https://api.jikan.moe/v4/top/anime?limit=1",
-  //       );
-  //       setAnime(res.data.data[0]);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchHeroBanner();
-  // }, []);
-
   return (
     <div className="relative h-[500px] overflow-hidden rounded-2xl mb-8">
       {/* Background Image */}
