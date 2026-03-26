@@ -8,9 +8,10 @@ import { toast } from "sonner";
 
 export function Favorite() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  // const [favoriteAnime, setFavoriteAnime] = useState<AnimeDetails[]>([]);
+
   const {
     favorites,
+    addFavorite,
     removeFavorite,
     addWatchLater,
     removeWatchLater,
@@ -18,6 +19,7 @@ export function Favorite() {
     isWatchLater,
   } = useOutletContext<{
     favorites: AnimeDetails[];
+    addFavorite: (anime: AnimeDetails) => void;
     removeFavorite: (id: number) => void;
     addWatchLater: (anime: AnimeDetails) => void;
     removeWatchLater: (id: number) => void;
@@ -99,6 +101,50 @@ export function Favorite() {
         <AnimeDetailModal
           anime={selectedAnime}
           onClose={() => setSelectedAnime(null)}
+          isFavorite={selectedAnime ? isFavorite(selectedAnime.id) : false}
+          isWatchLater={selectedAnime ? isWatchLater(selectedAnime.id) : false}
+          onFavorite={() => {
+            if (!selectedAnime) return;
+            const anime: AnimeDetails = {
+              id: selectedAnime.id,
+              title: selectedAnime.title,
+              image: selectedAnime.image,
+              rating: selectedAnime.rating,
+              status: selectedAnime.status,
+              episodes: selectedAnime.episodes ?? undefined,
+              description: selectedAnime.description,
+              genres: selectedAnime.genres,
+              year: selectedAnime.year ?? undefined,
+              studio: selectedAnime.studio,
+            };
+            isFavorite(selectedAnime.id)
+              ? removeFavorite(selectedAnime.id)
+              : addFavorite(anime);
+            isFavorite(selectedAnime.id)
+              ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
+              : toast.success(`Added "${selectedAnime.title}" to favorites`);
+          }}
+          onWatchLater={() => {
+            if (!selectedAnime) return;
+            const anime: AnimeDetails = {
+              id: selectedAnime.id,
+              title: selectedAnime.title,
+              image: selectedAnime.image,
+              rating: selectedAnime.rating,
+              status: selectedAnime.status,
+              episodes: selectedAnime.episodes ?? undefined,
+              description: selectedAnime.description,
+              genres: selectedAnime.genres,
+              year: selectedAnime.year ?? undefined,
+              studio: selectedAnime.studio,
+            };
+            isWatchLater(selectedAnime.id)
+              ? removeWatchLater(selectedAnime.id)
+              : addWatchLater(anime);
+            isWatchLater(selectedAnime.id)
+              ? toast.error(`Removed "${selectedAnime.title}" from watch later`)
+              : toast.success(`Added "${selectedAnime.title}" to watch later`);
+          }}
         />
       )}
     </div>

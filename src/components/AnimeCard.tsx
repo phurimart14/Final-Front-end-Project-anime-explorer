@@ -1,5 +1,4 @@
 import { Star, Play, Heart, Clock } from "lucide-react";
-import { useState } from "react";
 
 interface AnimeCardProps {
   title: string;

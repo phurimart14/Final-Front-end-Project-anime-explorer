@@ -9,17 +9,27 @@ import {
   Users,
   Tag,
 } from "lucide-react";
-import { useState } from "react";
-import type { JikanAnime, AnimeDetails } from "../types/types";
+import type { AnimeDetails } from "../types/types";
 
 interface AnimeDetailModalProps {
   anime: AnimeDetails;
+  isFavorite: boolean;
+  isWatchLater: boolean;
+  onFavorite: () => void;
+  onWatchLater: () => void;
   onClose: () => void;
 }
 
-export function AnimeDetailModal({ anime, onClose }: AnimeDetailModalProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isWatchLater, setIsWatchLater] = useState(false);
+export function AnimeDetailModal({
+  anime,
+  isFavorite,
+  isWatchLater,
+  onFavorite,
+  onWatchLater,
+  onClose,
+}: AnimeDetailModalProps) {
+  // const [isFavorite, setIsFavorite] = useState(false);
+  // const [isWatchLater, setIsWatchLater] = useState(false);
 
   const statusColors = {
     Airing: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -78,7 +88,7 @@ export function AnimeDetailModal({ anime, onClose }: AnimeDetailModalProps) {
                 </button>
 
                 <button
-                  onClick={() => setIsFavorite(!isFavorite)}
+                  onClick={onFavorite}
                   className={`p-3 rounded-lg border transition-all ${
                     isFavorite
                       ? "bg-pink-600 border-pink-500 text-white"
@@ -91,7 +101,7 @@ export function AnimeDetailModal({ anime, onClose }: AnimeDetailModalProps) {
                 </button>
 
                 <button
-                  onClick={() => setIsWatchLater(!isWatchLater)}
+                  onClick={onWatchLater}
                   className={`p-3 rounded-lg border transition-all ${
                     isWatchLater
                       ? "bg-cyan-600 border-cyan-500 text-white"

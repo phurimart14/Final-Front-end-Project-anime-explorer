@@ -14,11 +14,15 @@ export function WatchLater() {
     addFavorite,
     removeWatchLater,
     isFavorite,
+    removeFavorite,
+    addWatchLater,
     isWatchLater,
   } = useOutletContext<{
     watchLater: AnimeDetails[];
     addFavorite: (anime: AnimeDetails) => void;
+    addWatchLater: (anime: AnimeDetails) => void;
     removeWatchLater: (id: number) => void;
+    removeFavorite: (id: number) => void;
     isFavorite: (id: number) => boolean;
     isWatchLater: (id: number) => boolean;
   }>();
@@ -82,7 +86,8 @@ export function WatchLater() {
                 onFavorite={() =>
                   isFavorite(anime.id) ? undefined : addFavorite(anime)
                 }
-                onWatchLater={() => {removeWatchLater(anime.id);
+                onWatchLater={() => {
+                  removeWatchLater(anime.id);
                   toast.error(`Removed "${anime.title}" from watch later`);
                 }}
                 onClick={() => setSelectedAnime(anime)}
@@ -97,6 +102,50 @@ export function WatchLater() {
         <AnimeDetailModal
           anime={selectedAnime}
           onClose={() => setSelectedAnime(null)}
+          isFavorite={selectedAnime ? isFavorite(selectedAnime.id) : false}
+          isWatchLater={selectedAnime ? isWatchLater(selectedAnime.id) : false}
+          onFavorite={() => {
+            if (!selectedAnime) return;
+            const anime: AnimeDetails = {
+              id: selectedAnime.id,
+              title: selectedAnime.title,
+              image: selectedAnime.image,
+              rating: selectedAnime.rating,
+              status: selectedAnime.status,
+              episodes: selectedAnime.episodes ?? undefined,
+              description: selectedAnime.description,
+              genres: selectedAnime.genres,
+              year: selectedAnime.year ?? undefined,
+              studio: selectedAnime.studio,
+            };
+            isFavorite(selectedAnime.id)
+              ? removeFavorite(selectedAnime.id)
+              : addFavorite(anime);
+            isFavorite(selectedAnime.id)
+              ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
+              : toast.success(`Added "${selectedAnime.title}" to favorites`);
+          }}
+          onWatchLater={() => {
+            if (!selectedAnime) return;
+            const anime: AnimeDetails = {
+              id: selectedAnime.id,
+              title: selectedAnime.title,
+              image: selectedAnime.image,
+              rating: selectedAnime.rating,
+              status: selectedAnime.status,
+              episodes: selectedAnime.episodes ?? undefined,
+              description: selectedAnime.description,
+              genres: selectedAnime.genres,
+              year: selectedAnime.year ?? undefined,
+              studio: selectedAnime.studio,
+            };
+            isWatchLater(selectedAnime.id)
+              ? removeWatchLater(selectedAnime.id)
+              : addWatchLater(anime);
+            isWatchLater(selectedAnime.id)
+              ? toast.error(`Removed "${selectedAnime.title}" from watch later`)
+              : toast.success(`Added "${selectedAnime.title}" to watch later`);
+          }}
         />
       )}
     </div>
