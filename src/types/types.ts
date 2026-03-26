@@ -26,9 +26,3 @@ export interface AnimeDetails {
   studio?: string;
   members?: number;
 }
-
-
-export interface AnimeGridProps {
-  searchQuery: string;
-  filterGenres: string[];
-}

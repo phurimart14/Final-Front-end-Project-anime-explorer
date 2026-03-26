@@ -21,7 +21,7 @@ export function RootLayout() {
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col h-full overflow-hidden">
         {/* Search Bar */}
-        {/* 4. ใส่เงื่อนไขครอบ SearchBar ไว้ */}
+        {/* ใส่เงื่อนไขครอบ SearchBar ไว้ */}
         {shouldShowSearch && (
           <SearchBar onSearch={setSearchQuery} onFilter={setFilterGenres} />
         )}
