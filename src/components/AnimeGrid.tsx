@@ -130,51 +130,21 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
           isWatchLater={heroAnime ? isWatchLater(heroAnime.mal_id) : false}
           onFavorite={() => {
             if (!heroAnime) return;
-            const anime: AnimeDetails = {
-              id: heroAnime.mal_id,
-              title: heroAnime.title,
-              image: heroAnime.images.jpg.large_image_url,
-              rating: heroAnime.score,
-              status:
-                heroAnime.status === "Currently Airing"
-                  ? "Airing"
-                  : "Completed",
-              episodes: heroAnime.episodes ?? undefined,
-              description: heroAnime.synopsis,
-              genres: heroAnime.genres.map((g) => g.name),
-              year: heroAnime.year ?? undefined,
-              studio: heroAnime.studios?.[0]?.name,
-            };
+            const anime = jikanToAnime(heroAnime); // ← ใช้ jikanToAnime แทนสร้าง object ใหม่
             isFavorite(heroAnime.mal_id)
-              ? removeFavorite(heroAnime.mal_id)
-              : addFavorite(anime);
-            isFavorite(heroAnime.mal_id)
-              ? toast.error(`Removed "${heroAnime.title}" from favorites`)
-              : toast.success(`Added "${heroAnime.title}" to favorites`);
+              ? (removeFavorite(heroAnime.mal_id),
+                toast.error(`Removed "${heroAnime.title}" from favorites`))
+              : (addFavorite(anime),
+                toast.success(`Added "${heroAnime.title}" to favorites`));
           }}
           onWatchLater={() => {
             if (!heroAnime) return;
-            const anime: AnimeDetails = {
-              id: heroAnime.mal_id,
-              title: heroAnime.title,
-              image: heroAnime.images.jpg.large_image_url,
-              rating: heroAnime.score,
-              status:
-                heroAnime.status === "Currently Airing"
-                  ? "Airing"
-                  : "Completed",
-              episodes: heroAnime.episodes ?? undefined,
-              description: heroAnime.synopsis,
-              genres: heroAnime.genres.map((g) => g.name),
-              year: heroAnime.year ?? undefined,
-              studio: heroAnime.studios?.[0]?.name,
-            };
+            const anime = jikanToAnime(heroAnime); // ← ใช้ jikanToAnime แทนสร้าง object ใหม่
             isWatchLater(heroAnime.mal_id)
-              ? removeWatchLater(heroAnime.mal_id)
-              : addWatchLater(anime);
-            isWatchLater(heroAnime.mal_id)
-              ? toast.error(`Removed "${heroAnime.title}" from watch later`)
-              : toast.success(`Added "${heroAnime.title}" to watch later`);
+              ? (removeWatchLater(heroAnime.mal_id),
+                toast.error(`Removed "${heroAnime.title}" from favorites`))
+              : (addWatchLater(anime),
+                toast.success(`Added "${heroAnime.title}" to favorites`));
           }}
         />
       )}
@@ -272,45 +242,21 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
           isWatchLater={selectedAnime ? isWatchLater(selectedAnime.id) : false}
           onFavorite={() => {
             if (!selectedAnime) return;
-            const anime: AnimeDetails = {
-              id: selectedAnime.id,
-              title: selectedAnime.title,
-              image: selectedAnime.image,
-              rating: selectedAnime.rating,
-              status: selectedAnime.status,
-              episodes: selectedAnime.episodes ?? undefined,
-              description: selectedAnime.description,
-              genres: selectedAnime.genres,
-              year: selectedAnime.year ?? undefined,
-              studio: selectedAnime.studio,
-            };
             isFavorite(selectedAnime.id)
               ? removeFavorite(selectedAnime.id)
-              : addFavorite(anime);
+              : addFavorite(selectedAnime); // ← ส่ง selectedAnime ตรงๆ ได้เลย
             isFavorite(selectedAnime.id)
               ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
               : toast.success(`Added "${selectedAnime.title}" to favorites`);
           }}
           onWatchLater={() => {
             if (!selectedAnime) return;
-            const anime: AnimeDetails = {
-              id: selectedAnime.id,
-              title: selectedAnime.title,
-              image: selectedAnime.image,
-              rating: selectedAnime.rating,
-              status: selectedAnime.status,
-              episodes: selectedAnime.episodes ?? undefined,
-              description: selectedAnime.description,
-              genres: selectedAnime.genres,
-              year: selectedAnime.year ?? undefined,
-              studio: selectedAnime.studio,
-            };
             isWatchLater(selectedAnime.id)
               ? removeWatchLater(selectedAnime.id)
-              : addWatchLater(anime);
+              : addWatchLater(selectedAnime); // ← ส่ง selectedAnime
             isWatchLater(selectedAnime.id)
-              ? toast.error(`Removed "${selectedAnime.title}" from watch later`)
-              : toast.success(`Added "${selectedAnime.title}" to watch later`);
+              ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
+              : toast.success(`Added "${selectedAnime.title}" to favorites`);
           }}
         />
       )}

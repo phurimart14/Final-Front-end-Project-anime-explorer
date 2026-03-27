@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { JikanAnime, AnimeDetails } from "../types/types";
+import { toast } from "sonner";
 
 const BASE_URL = "https://api.jikan.moe/v4";
 
@@ -44,4 +45,22 @@ export const fetchTrendingAnime = async (): Promise<JikanAnime[]> => {
 export const fetchGenres = async () => {
   const res = await axios.get(`${BASE_URL}/genres/anime`);
   return res.data.data.filter((g: { mal_id: number }) => g.mal_id <= 43);
+};
+
+//Herosection
+export const handleWatchlistAction = (
+  id: number,
+  anime: AnimeDetails,
+  checkFn: (id: number) => boolean,
+  addFn: (anime: AnimeDetails) => void,
+  removeFn: (id: number) => void,
+  itemName: string
+) => {
+  if (checkFn(id)) {
+    removeFn(id);
+    toast.error(`Removed "${itemName}" from favorites`);
+  } else {
+    addFn(anime);
+    toast.success(`Added "${itemName}" to favorites`);
+  }
 };
