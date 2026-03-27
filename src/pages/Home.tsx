@@ -1,4 +1,4 @@
-import { AnimeGrid } from "../components/AnimeGrid.tsx";
+import { AnimeGrid } from "../components/AnimeGrid";
 import { useOutletContext } from "react-router-dom";
 
 export function Home() {
@@ -6,9 +6,9 @@ export function Home() {
     searchQuery: string;
     filterGenres: string[];
   }>();
-  
+
   return (
-    <div className="p-6 h-screen">
+    <div className="p-6">
       <AnimeGrid searchQuery={searchQuery} filterGenres={filterGenres} />
     </div>
   );

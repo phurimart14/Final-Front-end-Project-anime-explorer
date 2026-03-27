@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router";
+import { Outlet } from "react-router";
 import { Sidebar } from "../components/Sidebar";
 import { SearchBar } from "../components/SearchBar";
 import { useState } from "react";
