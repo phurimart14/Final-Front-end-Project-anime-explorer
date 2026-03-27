@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 export function WatchLater() {
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
-  // const [watchLaterAnime, setWatchLaterAnime] = useState<AnimeDetails[]>([]);
+  
   const {
     watchLater,
     addFavorite,
