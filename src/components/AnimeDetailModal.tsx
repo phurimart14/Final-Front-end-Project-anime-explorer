@@ -28,9 +28,6 @@ export function AnimeDetailModal({
   onWatchLater,
   onClose,
 }: AnimeDetailModalProps) {
-  // const [isFavorite, setIsFavorite] = useState(false);
-  // const [isWatchLater, setIsWatchLater] = useState(false);
-
   const statusColors = {
     Airing: "bg-green-500/20 text-green-400 border-green-500/30",
     Completed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -108,7 +105,9 @@ export function AnimeDetailModal({
                       : "bg-zinc-900/80 backdrop-blur-sm border-zinc-700 text-zinc-300 hover:text-cyan-400 hover:border-cyan-500/50"
                   }`}
                 >
-                  <Clock className={`w-5 h-5 ${isWatchLater}`} />
+                  <Clock
+                    className={`w-5 h-5 ${isWatchLater ? "text-white " : " "}`}
+                  />
                 </button>
               </div>
             </div>

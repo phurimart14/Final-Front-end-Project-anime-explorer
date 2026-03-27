@@ -79,7 +79,9 @@ export function AnimeCard({
                 : "bg-zinc-900/80 border-zinc-700 text-zinc-300 hover:text-cyan-400 hover:border-cyan-500/50"
             }`}
           >
-            <Clock className={`w-4 h-4 ${isWatchLater}`} />
+            <Clock
+              className={`w-4 h-4 ${isWatchLater ? "text-white " : " "}`}
+            />
           </button>
         </div>
 

@@ -98,7 +98,9 @@ export function HeroSection({
                   : "bg-zinc-900/80 border-zinc-700 text-zinc-300 hover:text-cyan-400 hover:border-cyan-500/50"
               }`}
             >
-              <Clock className={`w-5 h-5 ${isWatchLater}`} />
+              <Clock
+                className={`w-5 h-5 ${isWatchLater ? "text-white " : " "}`}
+              />
             </button>
           </div>
         </div>
