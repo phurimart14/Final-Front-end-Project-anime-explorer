@@ -12,6 +12,7 @@ import {
   jikanToAnime,
 } from "../services/animeService";
 
+
 interface AnimeGridProps {
   searchQuery: string;
   filterGenres: string[];
@@ -142,9 +143,9 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
             const anime = jikanToAnime(heroAnime); // ← ใช้ jikanToAnime แทนสร้าง object ใหม่
             isWatchLater(heroAnime.mal_id)
               ? (removeWatchLater(heroAnime.mal_id),
-                toast.error(`Removed "${heroAnime.title}" from favorites`))
+                toast.error(`Removed "${heroAnime.title}" from watch later`))
               : (addWatchLater(anime),
-                toast.success(`Added "${heroAnime.title}" to favorites`));
+                toast.success(`Added "${heroAnime.title}" to watch later`));
           }}
         />
       )}

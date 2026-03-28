@@ -51,21 +51,3 @@ export const fetchGenres = async () => {
   const res = await axios.get(`${BASE_URL}/genres/anime`);
   return res.data.data.filter((g: { mal_id: number }) => g.mal_id <= 43);
 };
-
-//Herosection
-export const handleWatchlistAction = (
-  id: number,
-  anime: AnimeDetails,
-  checkFn: (id: number) => boolean,
-  addFn: (anime: AnimeDetails) => void,
-  removeFn: (id: number) => void,
-  itemName: string,
-) => {
-  if (checkFn(id)) {
-    removeFn(id);
-    toast.error(`Removed "${itemName}" from favorites`);
-  } else {
-    addFn(anime);
-    toast.success(`Added "${itemName}" to favorites`);
-  }
-};
