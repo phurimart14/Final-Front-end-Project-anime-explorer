@@ -15,7 +15,6 @@ export function WatchLater() {
     removeWatchLater,
     isFavorite,
     removeFavorite,
-    addWatchLater,
     isWatchLater,
   } = useOutletContext<{
     watchLater: AnimeDetails[];
