@@ -83,9 +83,15 @@ export function WatchLater() {
                 episodes={anime.episodes}
                 isFavorite={isFavorite(anime.id)}
                 isWatchLater={isWatchLater(anime.id)}
-                onFavorite={() =>
-                  isFavorite(anime.id) ? undefined : addFavorite(anime)
-                }
+                onFavorite={() => {
+                  if (isFavorite(anime.id)) {
+                    removeFavorite(anime.id);
+                    toast.error(`Removed "${anime.title}" from favorites`);
+                  } else {
+                    addFavorite(anime);
+                    toast.success(`Added "${anime.title}" to favorites`);
+                  }
+                }}
                 onWatchLater={() => {
                   removeWatchLater(anime.id);
                   toast.error(`Removed "${anime.title}" from watch later`);
@@ -102,8 +108,8 @@ export function WatchLater() {
         <AnimeDetailModal
           anime={selectedAnime}
           onClose={() => setSelectedAnime(null)}
-          isFavorite={selectedAnime ? isFavorite(selectedAnime.id) : false}
-          isWatchLater={selectedAnime ? isWatchLater(selectedAnime.id) : false}
+          isFavorite={isFavorite(selectedAnime.id)}
+          isWatchLater={isWatchLater(selectedAnime.id)}
           onFavorite={() => {
             if (isFavorite(selectedAnime.id)) {
               removeFavorite(selectedAnime.id);
