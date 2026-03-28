@@ -10,7 +10,12 @@ export const jikanToAnime = (anime: JikanAnime): AnimeDetails => ({
   title: anime.title,
   image: anime.images.jpg.large_image_url,
   rating: anime.score,
-  status: anime.status === "Currently Airing" ? "Airing" : "Completed",
+  status:
+    anime.status === "Currently Airing"
+      ? "Airing"
+      : anime.status === "Not yet aired"
+        ? "Upcoming"
+        : "Completed",
   episodes: anime.episodes ?? undefined,
   description: anime.synopsis,
   genres: anime.genres.map((g) => g.name),
@@ -54,7 +59,7 @@ export const handleWatchlistAction = (
   checkFn: (id: number) => boolean,
   addFn: (anime: AnimeDetails) => void,
   removeFn: (id: number) => void,
-  itemName: string
+  itemName: string,
 ) => {
   if (checkFn(id)) {
     removeFn(id);

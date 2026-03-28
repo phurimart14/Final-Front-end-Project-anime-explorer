@@ -238,8 +238,8 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
         <AnimeDetailModal
           anime={selectedAnime}
           onClose={handleCloseModal}
-          isFavorite={selectedAnime ? isFavorite(selectedAnime.id) : false}
-          isWatchLater={selectedAnime ? isWatchLater(selectedAnime.id) : false}
+          isFavorite={isFavorite(selectedAnime.id)}
+          isWatchLater={isWatchLater(selectedAnime.id)}
           onFavorite={() => {
             if (!selectedAnime) return;
             isFavorite(selectedAnime.id)

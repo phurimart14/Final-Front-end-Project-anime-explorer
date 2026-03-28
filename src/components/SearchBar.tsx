@@ -1,6 +1,6 @@
 import { Search, Filter, Bell, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { fetchGenres } from "../services/animeService";
 
 interface Genre {
   mal_id: number;
@@ -19,18 +19,17 @@ export function SearchBar({ onSearch, onFilter, onMenuClick }: SearchBarProps) {
   const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    const fetchGenres = async () => {
+    const loadGenres = async () => {
       try {
-        const res = await axios.get("https://api.jikan.moe/v4/genres/anime");
-        const filtered = res.data.data.filter((g: Genre) => g.mal_id <= 43);
-        setGenres(filtered);
+        const data = await fetchGenres();
+        setGenres(data);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchGenres();
+    loadGenres();
   }, []);
-
+  
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
