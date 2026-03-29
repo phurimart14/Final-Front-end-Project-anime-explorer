@@ -1,6 +1,5 @@
 import axios from "axios";
 import type { JikanAnime, AnimeDetails } from "../types/types";
-import { toast } from "sonner";
 
 const BASE_URL = "https://api.jikan.moe/v4";
 
