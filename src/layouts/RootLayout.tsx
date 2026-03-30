@@ -21,8 +21,8 @@ export function RootLayout() {
 
   return (
     <div className="size-full bg-black text-zinc-100 flex overflow-hidden">
-      {/* Sidebar */}
       <Toaster position="bottom-right" richColors />
+      {/* Sidebar */}
       <Sidebar isOpen={isMobileMenuOpen} onClose={closeMobileMenu} />
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col h-full overflow-hidden">
