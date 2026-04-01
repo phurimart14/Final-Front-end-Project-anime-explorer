@@ -26,7 +26,13 @@ export const jikanToAnime = (anime: JikanAnime): AnimeDetails => ({
 // ดึง Popular This Season
 export const fetchSeasonNow = async (): Promise<JikanAnime[]> => {
   const res = await axios.get(`${BASE_URL}/seasons/now?limit=24`);
-  return res.data.data;
+  // กรอง duplicate ออกด้วย mal_id
+  const unique = res.data.data.filter(
+    (anime: JikanAnime, index: number, self: JikanAnime[]) =>
+      index === self.findIndex((a) => a.mal_id === anime.mal_id),
+  );
+
+  return unique;
 };
 
 // ดึง Search
