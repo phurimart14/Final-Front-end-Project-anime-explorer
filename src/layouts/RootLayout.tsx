@@ -26,7 +26,7 @@ export function RootLayout() {
 
       <Sidebar isOpen={isMobileMenuOpen} onClose={closeMobileMenu} />
       {/* Main Content */}
-      <div className="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden ">
+      <div className="flex-1 md:ml-64 flex flex-col h-full overflow-hidden ">
         {/* Search Bar */}
         <SearchBar
           onSearch={setSearchQuery}
