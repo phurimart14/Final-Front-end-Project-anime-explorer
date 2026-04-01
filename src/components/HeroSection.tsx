@@ -50,8 +50,13 @@ export function HeroSection({
           {/* Meta Info */}
           <div className="flex items-center gap-4 mb-4 text-zinc-300">
             <div className="flex items-center gap-1">
-              <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
-              <span className="font-semibold">{anime?.score}</span>
+              {anime?.score && (
+                <>
+                  <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+                  <span className="font-semibold">{anime?.score}</span>
+                </>
+              )}
+              <span className="font-semibold">Pending Score</span>
             </div>
             <span>•</span>
             <span>

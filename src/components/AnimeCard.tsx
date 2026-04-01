@@ -100,9 +100,16 @@ export function AnimeCard({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+            {rating && (
+              <>
+                <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                <span className="text-sm font-medium text-zinc-100">
+                  {rating?.toFixed(1)}
+                </span>
+              </>
+            )}
             <span className="text-sm font-medium text-zinc-100">
-              {rating?.toFixed(1)}
+              
             </span>
           </div>
 
