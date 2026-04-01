@@ -8,7 +8,7 @@ export function Home() {
   }>();
 
   return (
-    <div className="p-6 h-screen">
+    <div className="p-6 ">
       <AnimeGrid searchQuery={searchQuery} filterGenres={filterGenres} />
     </div>
   );

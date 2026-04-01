@@ -20,13 +20,13 @@ export function RootLayout() {
   };
 
   return (
-    <div className="size-full bg-black text-zinc-100 flex overflow-hidden">
+    <div className="size-full  bg-black text-zinc-100 flex overflow-hidden">
       <Toaster position="bottom-right" richColors />
       {/* Sidebar */}
 
       <Sidebar isOpen={isMobileMenuOpen} onClose={closeMobileMenu} />
       {/* Main Content */}
-      <div className="flex-1 md:ml-64 flex flex-col h-full overflow-hidden">
+      <div className="flex-1 md:ml-64 flex flex-col h-full overflow-hidden z-50">
         {/* Search Bar */}
         <SearchBar
           onSearch={setSearchQuery}
@@ -35,7 +35,7 @@ export function RootLayout() {
         />
 
         {/* Content Area */}
-        <main className="h-full flex-1 overflow-y-auto bg-gradient-to-br from-black via-zinc-950 to-black">
+        <main className="min-h-screen flex-1 overflow-y-auto bg-gradient-to-br from-black via-zinc-950 to-black">
           <Outlet context={{ searchQuery, filterGenres, ...watchlist }} />
         </main>
       </div>
