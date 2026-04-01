@@ -29,7 +29,7 @@ export function SearchBar({ onSearch, onFilter, onMenuClick }: SearchBarProps) {
     };
     loadGenres();
   }, []);
-  
+
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
@@ -81,7 +81,7 @@ export function SearchBar({ onSearch, onFilter, onMenuClick }: SearchBarProps) {
       </div>
       {/* Filter Dropdown */}
       {isFilterOpen && (
-        <div className="absolute left-6 right-6 mt-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-50 left-6 right-6 mt-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-zinc-100">
