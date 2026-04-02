@@ -123,7 +123,14 @@ export function AnimeDetailModal({
                   <span className="text-xs text-zinc-400">Rating</span>
                 </div>
                 <p className="text-xl font-bold text-zinc-100">
-                  {anime.rating?.toFixed(1)}/10
+                  {anime.rating ? (
+                    <>
+                      {anime.rating.toFixed(1)}
+                      <span className="text-zinc-500 text-sm">/10</span>
+                    </>
+                  ) : (
+                    <span className="text-zinc-500">Pending Score</span>
+                  )}
                 </p>
               </div>
 
