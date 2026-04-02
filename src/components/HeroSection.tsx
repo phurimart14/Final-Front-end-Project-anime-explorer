@@ -89,7 +89,7 @@ export function HeroSection({
           </p>
 
           {/* Buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             {/* watch button */}
             <button className="px-6 md:px-8 py-2.5 md:py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl flex items-center gap-2 transition-all transform hover:scale-105 active:scale-95 text-sm md:text-base shadow-lg shadow-purple-600/20">
               <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
