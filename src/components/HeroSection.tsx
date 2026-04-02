@@ -62,13 +62,16 @@ export function HeroSection({
           {/* Meta Info */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-6 text-xs md:text-sm text-zinc-300 font-medium">
             <div className="flex items-center gap-1">
-              {anime?.score && (
+              {anime?.score ? (
                 <>
                   <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
                   <span className="font-semibold">{anime?.score}</span>
                 </>
+              ) : (
+                <span className="font-semibold text-zinc-500">
+                  Pending Score
+                </span>
               )}
-              <span className="font-semibold">Pending Score</span>
             </div>
             <span>•</span>
             <span>
