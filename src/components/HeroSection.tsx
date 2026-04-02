@@ -38,7 +38,7 @@ export function HeroSection({
 
       {/* Content */}
       <div className="relative h-full flex items-end p-6 sm:p-8 md:p-12 lg:p-16">
-        <div className="w-full max-w-3xl">
+        <div className="w-full max-w-3xl overflow-hidden">
           {/* Badge */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <span className="px-3 py-1  md:px-4 md:py-1.5 text-[10px] md:text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full">
@@ -55,7 +55,7 @@ export function HeroSection({
             </span>
           </div>
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl  lg:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent line-clamp-2">
             {anime?.title}
           </h1>
 
@@ -84,7 +84,7 @@ export function HeroSection({
           </div>
 
           {/* Description */}
-          <p className="text-zinc-400 text-sm md:text-lg mb-8 line-clamp-2 md:line-clamp-3 max-w-2xl font-light">
+          <p className="text-zinc-400 text-sm md:text-lg mb-8 line-clamp-1 md:line-clamp-3 max-w-2xl font-light">
             {anime?.synopsis}
           </p>
 
