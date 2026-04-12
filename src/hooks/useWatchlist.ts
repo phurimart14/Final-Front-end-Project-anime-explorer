@@ -1,3 +1,5 @@
+// Legacy: replaced by Zustand store (watchlistStore.ts)
+// Kept for reference only
 import { useState, useEffect } from "react";
 import type { AnimeDetails } from "../types/types";
 
