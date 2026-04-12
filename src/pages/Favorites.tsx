@@ -3,7 +3,7 @@ import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import type { AnimeDetails } from "../types/types";
 import { Heart, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useWatchlistStore } from "../store/watchlistStore";
 import { toast } from "sonner";
 
 export function Favorite() {
@@ -17,15 +17,7 @@ export function Favorite() {
     removeWatchLater,
     isFavorite,
     isWatchLater,
-  } = useOutletContext<{
-    favorites: AnimeDetails[];
-    addFavorite: (anime: AnimeDetails) => void;
-    removeFavorite: (id: number) => void;
-    addWatchLater: (anime: AnimeDetails) => void;
-    removeWatchLater: (id: number) => void;
-    isFavorite: (id: number) => boolean;
-    isWatchLater: (id: number) => boolean;
-  }>();
+  } = useWatchlistStore();
 
   return (
     <div className="p-6">

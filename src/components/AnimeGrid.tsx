@@ -5,7 +5,7 @@ import { AnimeDetailModal } from "./AnimeDetailModal";
 import { AnimeCard } from "./AnimeCard";
 import type { JikanAnime, AnimeDetails } from "../types/types";
 import { toast } from "sonner";
-import { useOutletContext } from "react-router-dom";
+import { useWatchlistStore } from "../store/watchlistStore";
 import {
   fetchSeasonNow,
   fetchSearchAnime,
@@ -30,14 +30,7 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
     removeWatchLater,
     isFavorite,
     isWatchLater,
-  } = useOutletContext<{
-    addFavorite: (anime: AnimeDetails) => void;
-    removeFavorite: (id: number) => void;
-    addWatchLater: (anime: AnimeDetails) => void;
-    removeWatchLater: (id: number) => void;
-    isFavorite: (id: number) => boolean;
-    isWatchLater: (id: number) => boolean;
-  }>();
+  } = useWatchlistStore();
 
   const [heroAnime, setHeroAnime] = useState<JikanAnime | null>(null);
 
@@ -241,22 +234,22 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
           isFavorite={isFavorite(selectedAnime.id)}
           isWatchLater={isWatchLater(selectedAnime.id)}
           onFavorite={() => {
-            if (!selectedAnime) return;
-            isFavorite(selectedAnime.id)
-              ? removeFavorite(selectedAnime.id)
-              : addFavorite(selectedAnime); // ← ส่ง selectedAnime ตรงๆ ได้เลย
-            isFavorite(selectedAnime.id)
-              ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
-              : toast.success(`Added "${selectedAnime.title}" to favorites`);
+            if (isFavorite(selectedAnime.id)) {
+              removeFavorite(selectedAnime.id);
+              toast.error(`Removed "${selectedAnime.title}" from favorites`);
+            } else {
+              addFavorite(selectedAnime);
+              toast.success(`Added "${selectedAnime.title}" to favorites`);
+            }
           }}
           onWatchLater={() => {
-            if (!selectedAnime) return;
-            isWatchLater(selectedAnime.id)
-              ? removeWatchLater(selectedAnime.id)
-              : addWatchLater(selectedAnime); // ← ส่ง selectedAnime
-            isWatchLater(selectedAnime.id)
-              ? toast.error(`Removed "${selectedAnime.title}" from favorites`)
-              : toast.success(`Added "${selectedAnime.title}" to favorites`);
+            if (isWatchLater(selectedAnime.id)) {
+              removeWatchLater(selectedAnime.id);
+              toast.error(`Removed "${selectedAnime.title}" from watch later`);
+            } else {
+              addWatchLater(selectedAnime);
+              toast.success(`Added "${selectedAnime.title}" to watch later`);
+            }
           }}
         />
       )}

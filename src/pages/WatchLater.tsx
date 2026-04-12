@@ -3,7 +3,7 @@ import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import type { AnimeDetails } from "../types/types";
 import { Clock, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useWatchlistStore } from "../store/watchlistStore";
 import { toast } from "sonner";
 
 export function WatchLater() {
@@ -16,15 +16,8 @@ export function WatchLater() {
     isFavorite,
     removeFavorite,
     isWatchLater,
-  } = useOutletContext<{
-    watchLater: AnimeDetails[];
-    addFavorite: (anime: AnimeDetails) => void;
-    addWatchLater: (anime: AnimeDetails) => void;
-    removeWatchLater: (id: number) => void;
-    removeFavorite: (id: number) => void;
-    isFavorite: (id: number) => boolean;
-    isWatchLater: (id: number) => boolean;
-  }>();
+    addWatchLater,
+  } = useWatchlistStore();
 
   return (
     <div className="p-6">
@@ -122,6 +115,9 @@ export function WatchLater() {
             if (isWatchLater(selectedAnime.id)) {
               removeWatchLater(selectedAnime.id);
               toast.error(`Removed "${selectedAnime.title}" from watch later`);
+            } else {
+              addWatchLater(selectedAnime);
+              toast.success(`Added "${selectedAnime.title}" to watch later`);
             }
           }}
         />

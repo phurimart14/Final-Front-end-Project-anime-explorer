@@ -3,13 +3,11 @@ import { Sidebar } from "../components/Sidebar";
 import { SearchBar } from "../components/SearchBar";
 import { useState } from "react";
 import { Toaster } from "sonner";
-import { useWatchlist } from "../hooks/useWatchlist";
 
 export function RootLayout() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterGenres, setFilterGenres] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const watchlist = useWatchlist();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -36,7 +34,7 @@ export function RootLayout() {
 
         {/* Content Area */}
         <main className="min-h-screen flex-1 overflow-y-auto bg-gradient-to-br from-black via-zinc-950 to-black">
-          <Outlet context={{ searchQuery, filterGenres, ...watchlist }} />
+          <Outlet context={{ searchQuery, filterGenres }} />
         </main>
       </div>
     </div>

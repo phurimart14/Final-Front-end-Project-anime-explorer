@@ -3,7 +3,7 @@ import { AnimeDetailModal } from "../components/AnimeDetailModal";
 import { TrendingUp, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AnimeDetails } from "../types/types";
-import { useOutletContext } from "react-router-dom";
+import { useWatchlistStore } from "../store/watchlistStore";
 import { toast } from "sonner";
 import { fetchTrendingAnime, jikanToAnime } from "../services/animeService";
 
@@ -22,14 +22,7 @@ export function Trending() {
     removeWatchLater,
     isFavorite,
     isWatchLater,
-  } = useOutletContext<{
-    addFavorite: (anime: AnimeDetails) => void;
-    removeFavorite: (id: number) => void;
-    addWatchLater: (anime: AnimeDetails) => void;
-    removeWatchLater: (id: number) => void;
-    isFavorite: (id: number) => boolean;
-    isWatchLater: (id: number) => boolean;
-  }>();
+  } = useWatchlistStore();
 
   const handlePrevious = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
