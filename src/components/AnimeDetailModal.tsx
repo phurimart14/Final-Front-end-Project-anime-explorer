@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   X,
   Star,
@@ -8,6 +9,7 @@ import {
   Tv,
   Users,
   Tag,
+  AlertCircle,
 } from "lucide-react";
 import type { AnimeDetails } from "../types/types";
 
@@ -28,6 +30,8 @@ export function AnimeDetailModal({
   onWatchLater,
   onClose,
 }: AnimeDetailModalProps) {
+  const [imageError, setImageError] = useState(false);
+
   const statusColors = {
     Airing: "bg-green-500/20 text-green-400 border-green-500/30",
     Completed: "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -48,12 +52,26 @@ export function AnimeDetailModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Image */}
-          <div className="relative h-80 overflow-hidden">
-            <img
-              src={anime.image}
-              alt={anime.title}
-              className="w-full h-full object-cover aspect-[16/9] "
-            />
+          <div className="relative h-80 overflow-hidden bg-zinc-800">
+            {!imageError ? (
+              <>
+                <img
+                  src={anime?.image || ""}
+                  alt={anime?.title || "Anime"}
+                  className="w-full h-full object-cover aspect-[16/9]"
+                  onError={() => setImageError(true)}
+                />
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
+                <div className="text-center">
+                  <AlertCircle className="w-12 h-12 text-zinc-500 mx-auto mb-2" />
+                  <p className="text-zinc-400 text-sm">
+                    รูปภาพไม่สามารถโหลดได้
+                  </p>
+                </div>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
             {/* Close Button */}
             <button
@@ -66,16 +84,20 @@ export function AnimeDetailModal({
             {/* Status Badge */}
             <div className="absolute top-4 left-4">
               <span
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border backdrop-blur-sm ${statusColors[anime.status]}`}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium border backdrop-blur-sm ${
+                  anime?.status && statusColors[anime.status]
+                    ? statusColors[anime.status]
+                    : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+                }`}
               >
-                {anime.status}
+                {anime?.status || "Unknown Status"}
               </span>
             </div>
 
             {/* Title and Actions */}
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <h2 className="text-3xl font-bold text-white mb-4 drop-shadow-lg">
-                {anime.title}
+                {anime?.title || "Untitled Anime"}
               </h2>
 
               <div className="flex items-center gap-3">
@@ -123,18 +145,18 @@ export function AnimeDetailModal({
                   <span className="text-xs text-zinc-400">Rating</span>
                 </div>
                 <p className="text-xl font-bold text-zinc-100">
-                  {anime.rating ? (
+                  {anime?.rating ? (
                     <>
                       {anime.rating.toFixed(1)}
                       <span className="text-zinc-500 text-sm">/10</span>
                     </>
                   ) : (
-                    <span className="text-zinc-500">Pending Score</span>
+                    <span className="text-zinc-500">ไม่มีข้อมูล</span>
                   )}
                 </p>
               </div>
 
-              {anime.episodes && (
+              {anime?.episodes && (
                 <div className="bg-zinc-800 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-purple-500 mb-1">
                     <Tv className="w-4 h-4" />
@@ -146,7 +168,7 @@ export function AnimeDetailModal({
                 </div>
               )}
 
-              {anime.year && (
+              {anime?.year && (
                 <div className="bg-zinc-800 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-cyan-500 mb-1">
                     <Calendar className="w-4 h-4" />
@@ -158,7 +180,7 @@ export function AnimeDetailModal({
                 </div>
               )}
 
-              {anime.studio && (
+              {anime?.studio && (
                 <div className="bg-zinc-800 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-pink-500 mb-1">
                     <Users className="w-4 h-4" />
@@ -172,7 +194,7 @@ export function AnimeDetailModal({
             </div>
 
             {/* Description */}
-            {anime.description && (
+            {anime?.description && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-zinc-100 mb-3">
                   Synopsis
@@ -184,7 +206,7 @@ export function AnimeDetailModal({
             )}
 
             {/* Genres */}
-            {anime.genres && anime.genres.length > 0 && (
+            {anime?.genres && anime.genres.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="w-5 h-5 text-purple-500" />
@@ -198,7 +220,7 @@ export function AnimeDetailModal({
                       key={index}
                       className="px-3 py-1.5 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-purple-400 text-sm font-medium rounded-full"
                     >
-                      {genre}
+                      {genre || "Unknown Genre"}
                     </span>
                   ))}
                 </div>
