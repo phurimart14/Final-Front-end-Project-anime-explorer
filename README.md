@@ -3,7 +3,7 @@
 A web application for discovering and tracking anime built with React + TypeScript + Tailwind CSS
 
 ## Tech Stack
-- **Frontend**: React 18 + TypeScript + Vite
+- **Frontend**: React 18 + TypeScript + Vite + Zustand
 - **CSS Framework**: Tailwind CSS
 - **API**: Jikan API v4 (MyAnimeList) — Free, no key needed
 - **HTTP Client**: Axios
