@@ -20,6 +20,7 @@ interface AnimeGridProps {
 export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
   const [animeData, setAnimeData] = useState<AnimeDetails[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAnime, setSelectedAnime] = useState<AnimeDetails | null>(null);
 
@@ -79,19 +80,19 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
     const fetchAnime = async () => {
       try {
         setLoading(true);
+        setError(null);
         if (searchQuery) {
-          // ถ้ามี searchQuery → ยิง search API
           const data = await fetchSearchAnime(searchQuery);
           setAnimeData(data.map(jikanToAnime));
         } else {
-          // ถ้าไม่มี searchQuery → ดึง popular season
           const data = await fetchSeasonNow();
           const sorted = data.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
           setHeroAnime(sorted[0]);
           setAnimeData(sorted.map(jikanToAnime));
         }
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load anime. Please check your connection and try again.");
       } finally {
         setLoading(false);
       }
@@ -108,6 +109,21 @@ export function AnimeGrid({ searchQuery, filterGenres }: AnimeGridProps) {
     return (
       <div className="p-6 flex items-center justify-center h-screen">
         <div className="text-zinc-400 font-bold text-5xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center h-screen gap-4">
+        <div className="text-red-400 font-bold text-2xl">Something went wrong</div>
+        <div className="text-zinc-500 text-center max-w-md">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
